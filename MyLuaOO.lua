@@ -1,5 +1,5 @@
 -- Class
-__classes = {}
+local __classes = {}
 
 Class = {}
 Class.Create = function (options)
@@ -24,24 +24,42 @@ Class.Create = function (options)
         local newObj = {}
 
         do
-            local _call_ctor = function (c, ... )
-                if (c.parentClass and c.parentClass._ctor) then
-                    c.parentClass._ctor(newObj, ...)
+            local _call_ctor
+            _call_ctor = function (c, ... )
+                if (c.parentClass) then
+                    _call_ctor(c.parentClass, ...)
                 end
 
-                if (ctor) then
-                    ctor(newObj, ...)
+                if (c._ctor) then
+                    c._ctor(newObj, ...)
                 end
             end
             _call_ctor(newClass, ...)
         end
 
-        setmetatable(newObj, {__index = newClass})
+        setmetatable(newObj, {__index = __classes[newClass]})
         return newObj
     end
 
+    local override_table = {}
     -- cache here
-    __classes[newClass] = {}
+    __classes[newClass] = override_table
+
+    setmetatable(newClass, {__newindex=
+        function(table,k,v)
+            override_table[k]=v
+        end
+    })
+
+    if parentCls then
+        setmetatable(override_table, {__index=
+            function(table,k)
+                local ret = __classes[parentCls][k]
+                override_table[k]=ret
+                return ret
+            end
+        })
+    end
 
     return newClass
 end
@@ -74,7 +92,7 @@ end
 -- My Usage Demo
 obj1 = Object.New(33,44)
 print(obj1.x .. " " .. obj1.y)
-print(obj1.ToString(obj1))
+print(obj1:ToString())
 
 obj2 = Object.New()
 assert(obj1 ~= obj2)
@@ -86,14 +104,24 @@ Animal = Class.Create({
                         print('animal construct')
                     end
                       })
-Dog = Class.Create({parentClass = Animal,
+
+LactationAnimal = Class.Create({parentClass = Animal})
+
+Dog = Class.Create({parentClass = LactationAnimal,
                     ctor = function (self, ... )
                         print('dog construct')
                     end
                     })
-dog = Dog.New()
-dog.ToString()
 
+
+-- animal = Animal.New()
+-- animal:ToString()
+
+-- lactationAnim = LactationAnimal.New()
+-- lactationAnim:ToString()
+
+dog = Dog.New()
+dog:ToString()
 
 -- Get Class
 -- local ObjClass = anObj.GetClass()
