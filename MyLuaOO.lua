@@ -37,6 +37,10 @@ Class.Create = function (options)
             _call_ctor(newClass, ...)
         end
 
+        function newObj:GetClass()
+            return newObj
+        end
+
         setmetatable(newObj, {__index = __classes[newClass]})
         return newObj
     end
@@ -64,20 +68,7 @@ Class.Create = function (options)
     return newClass
 end
 
--- Object = {
-
---     ToString = function (self, ...)
---         return "object"
---     end
---     ,
-
---     New = function ( ... )
---        local o = {}
---        setmetatable(o, {__index = Object})
---        return o
---     end
--- }
-
+-- create root class
 Object = Class.Create({
                     ctor = function(self, x, y)
                         self.x = x
@@ -114,30 +105,32 @@ Dog = Class.Create({parentClass = LactationAnimal,
                     })
 
 
--- animal = Animal.New()
--- animal:ToString()
+animal = Animal.New()
+animal:ToString()
 
--- lactationAnim = LactationAnimal.New()
--- lactationAnim:ToString()
+lactationAnim = LactationAnimal.New()
+lactationAnim:ToString()
 
 dog = Dog.New()
 dog:ToString()
 
+dog2 = Dog.New()
+
 -- Get Class
--- local ObjClass = anObj.GetClass()
+local dogClass = dog.GetClass()
+local dog2Class = dog2.GetClass()
+assert(dogClass == Dog)
+assert(dogClass == dog2Class)
 
--- assert(ObjClass == Object)
 
-aa = [[
--- create class
-Animal = Class.Create(Object)
-Weather = Class.Create()  -- Create(parent)  parent == null => parent is Object class
+-- -- create class
+-- Animal = Class.Create(Object)
+-- Weather = Class.Create()  -- Create(parent)  parent == null => parent is Object class
 
--- extends
-Dog = Class.Create(Animal)
-Sunshine = Class.Create(Weather)
+-- -- extends
+-- Dog = Class.Create(Animal)
+-- Sunshine = Class.Create(Weather)
 
--- create Instance
-aDog = Dog.New()
-aWeather = Sunshine.New()
-]]
+-- -- create Instance
+-- aDog = Dog.New()
+-- aWeather = Sunshine.New()
