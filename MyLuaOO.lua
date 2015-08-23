@@ -38,7 +38,7 @@ Class.Create = function (options)
         end
 
         function newObj:GetClass()
-            return newObj
+            return newClass
         end
 
         setmetatable(newObj, {__index = __classes[newClass]})
@@ -117,8 +117,8 @@ dog:ToString()
 dog2 = Dog.New()
 
 -- Get Class
-local dogClass = dog.GetClass()
-local dog2Class = dog2.GetClass()
+local dogClass = dog:GetClass()
+local dog2Class = dog2:GetClass()
 assert(dogClass == Dog)
 assert(dogClass == dog2Class)
 
