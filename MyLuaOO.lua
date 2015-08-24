@@ -5,6 +5,10 @@ Class = {}
 Class.Create = function (options)
     local parentCls = options.parentClass or nil
 
+    if (Object ~= nil and parentCls == nil) then
+        parentCls = Object
+    end
+
     local ctor = options.ctor or nil
     if (ctor ~= nil and type(ctor) ~= 'function') then
         ctor = nil
@@ -90,7 +94,7 @@ assert(obj1 ~= obj2)
 
 -- Create Custom Class
 Animal = Class.Create({
-                    parentClass = Object,
+                    -- parentClass = Object,
                     ctor = function (self, ... )
                         print('animal construct')
                     end
@@ -134,3 +138,5 @@ assert(dogClass == dog2Class)
 -- -- create Instance
 -- aDog = Dog.New()
 -- aWeather = Sunshine.New()
+
+-- for idx, value in pairs(_G) do print(idx, type(value)) end
