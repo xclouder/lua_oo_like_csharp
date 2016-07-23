@@ -1,3 +1,5 @@
+```
+
 -- My Usage Demo
 obj1 = Object.New(33,44)
 print(obj1.x .. " " .. obj1.y)
@@ -54,3 +56,6 @@ aDog = Dog.New()
 aWeather = Sunshine.New()
 
 for idx, value in pairs(_G) do print(idx, type(value)) end
+
+
+```
